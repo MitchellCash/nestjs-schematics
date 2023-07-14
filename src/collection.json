@@ -117,6 +117,11 @@
       "description": "Create a Nest resource.",
       "schema": "./lib/resource/schema.json",
       "aliases": ["res"]
+    },
+    "workspace": {
+      "factory": "./lib/workspace/workspace.factory#main",
+      "description": "Create a Nest workspace.",
+      "schema": "./lib/workspace/schema.json"
     }
   }
 }

@@ -3,9 +3,7 @@ import {
   apply,
   mergeWith,
   move,
-  noop,
   Rule,
-  schematic,
   Source,
   template,
   url,
@@ -18,23 +16,22 @@ import {
   DEFAULT_LANGUAGE,
   DEFAULT_VERSION,
 } from '../defaults';
-import { ApplicationOptions } from './application.schema';
-import { WorkspaceOptions } from '../workspace/workspace.schema';
+import { WorkspaceOptions } from './workspace.schema';
 
-export function main(options: ApplicationOptions): Rule {
+export function main(options: WorkspaceOptions): Rule {
   options.name = normalizeToKebabOrSnakeCase(options.name.toString());
 
   const path =
-    !options.directory || options.directory === 'undefined'
-      ? options.name
-      : options.directory;
+      !options.directory || options.directory === 'undefined'
+          ? options.name
+          : options.directory;
 
   options = transform(options);
   return mergeWith(generate(options, path));
 }
 
-function transform(options: ApplicationOptions): ApplicationOptions {
-  const target: ApplicationOptions = Object.assign({}, options);
+function transform(options: WorkspaceOptions): WorkspaceOptions {
+  const target: WorkspaceOptions = Object.assign({}, options);
 
   target.author = !!target.author ? target.author : DEFAULT_AUTHOR;
   target.description = !!target.description
@@ -77,22 +74,8 @@ function resolvePackageName(path: string) {
   return baseFilename;
 }
 
-function generate(options: ApplicationOptions, path: string): Source {
-  const workspaceOptions: WorkspaceOptions = {
-    name: options.name,
-    author: options.author,
-    description: options.description,
-    directory: options.directory,
-    strict: options.strict,
-    version: options.version,
-    language: options.language,
-    packageManager: options.packageManager,
-    dependencies: options.dependencies,
-    devDependencies: options.devDependencies
-  }
-
+function generate(options: WorkspaceOptions, path: string): Source {
   return apply(url(join('./files' as Path, options.language)), [
-    options.createApplication ? schematic('workspace', workspaceOptions) : noop,
     template({
       ...strings,
       ...options,

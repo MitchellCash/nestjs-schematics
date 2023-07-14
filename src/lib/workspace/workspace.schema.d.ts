@@ -1,4 +1,4 @@
-export interface ApplicationOptions {
+export interface WorkspaceOptions {
   /**
    * Nest application name.
    */
@@ -40,8 +40,4 @@ export interface ApplicationOptions {
    * Nest included development dependencies (comma separated values).
    */
   devDependencies?: string;
-  /**
-   * Create a new initial application in the 'src' folder of the new workspace.
-   */
-  createApplication?: boolean;
 }
