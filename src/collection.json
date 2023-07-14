@@ -71,6 +71,11 @@
       "schema": "./lib/module/schema.json",
       "aliases": ["mo"]
     },
+    "nest-new": {
+      "factory": "./lib/nest-new/nest-new.factory#main",
+      "description": "Create a new project by combining the workspace and application schematics.",
+      "schema": "./lib/nest-new/schema.json"
+    },
     "pipe": {
       "factory": "./lib/pipe/pipe.factory#main",
       "description": "Create a Nest pipe.",
@@ -117,6 +122,11 @@
       "description": "Create a Nest resource.",
       "schema": "./lib/resource/schema.json",
       "aliases": ["res"]
+    },
+    "workspace": {
+      "factory": "./lib/workspace/workspace.factory#main",
+      "description": "Create a Nest workspace.",
+      "schema": "./lib/workspace/schema.json"
     }
   }
 }

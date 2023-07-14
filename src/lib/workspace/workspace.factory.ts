@@ -10,25 +10,45 @@ import {
 } from '@angular-devkit/schematics';
 import { basename, parse } from 'path';
 import { normalizeToKebabOrSnakeCase } from '../../utils/formatting';
-import { DEFAULT_LANGUAGE } from '../defaults';
-import { ApplicationOptions } from './application.schema';
+import {
+  DEFAULT_AUTHOR,
+  DEFAULT_DESCRIPTION,
+  DEFAULT_LANGUAGE,
+  DEFAULT_VERSION,
+} from '../defaults';
+import { WorkspaceOptions } from './workspace.schema';
 
-export function main(options: ApplicationOptions): Rule {
+export function main(options: WorkspaceOptions): Rule {
   options.name = normalizeToKebabOrSnakeCase(options.name.toString());
 
   const path =
-    !options.directory || options.directory === 'undefined'
-      ? options.name
-      : options.directory;
+      !options.directory || options.directory === 'undefined'
+          ? options.name
+          : options.directory;
 
   options = transform(options);
   return mergeWith(generate(options, path));
 }
 
-function transform(options: ApplicationOptions): ApplicationOptions {
-  const target: ApplicationOptions = Object.assign({}, options);
+function transform(options: WorkspaceOptions): WorkspaceOptions {
+  const target: WorkspaceOptions = Object.assign({}, options);
+
+  target.author = !!target.author ? target.author : DEFAULT_AUTHOR;
+  target.description = !!target.description
+    ? target.description
+    : DEFAULT_DESCRIPTION;
   target.language = !!target.language ? target.language : DEFAULT_LANGUAGE;
   target.name = resolvePackageName(target.name.toString());
+  target.version = !!target.version ? target.version : DEFAULT_VERSION;
+
+  target.packageManager =
+    !target.packageManager || target.packageManager === 'undefined'
+      ? 'npm'
+      : target.packageManager;
+  target.dependencies = !!target.dependencies ? target.dependencies : '';
+  target.devDependencies = !!target.devDependencies
+    ? target.devDependencies
+    : '';
   return target;
 }
 
@@ -54,7 +74,7 @@ function resolvePackageName(path: string) {
   return baseFilename;
 }
 
-function generate(options: ApplicationOptions, path: string): Source {
+function generate(options: WorkspaceOptions, path: string): Source {
   return apply(url(join('./files' as Path, options.language)), [
     template({
       ...strings,
